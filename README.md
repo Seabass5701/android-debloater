@@ -51,7 +51,7 @@ commenting out ones you wish to save (if necessary) or removing them.
 ##
 4) Initiate a wireless/USB ADB connection between android device and computer
 
-*after enabling USB Debugging*
+**after enabling USB Debugging**
 
 - Connect android device to computer via USB cable
 - Authorize connection to computer from your device

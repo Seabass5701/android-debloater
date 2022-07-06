@@ -111,6 +111,8 @@ check_adb_state() {
 	no_stderr export state="`adb get-state`"
 
 	no_stderr [ "`adb get-state`" = "device" ] || adb_state_invalid
+	
+	unset state
 }
 
 
@@ -179,6 +181,8 @@ do_action_apks() {
 			get_apk_curr && do_action && action_success || action_error
 		done
 	};
+	
+	unset action linecount curr_apk pkg_list
 }
 
 

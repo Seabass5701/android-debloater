@@ -93,7 +93,7 @@ adb_state_invalid() {
 
 # check whether adb can be ran
 check_adb() {
-	test -e "/usr/local/bin/adb" -o -e "/usr/bin/adb" || adb_not_found
+	[ -e "$HOME/.local/platform-tools/adb" ] || [ -e "/usr/local/bin/adb" ] || [ -e "/usr/bin/adb" ] || adb_not_found
 }
 
 
@@ -106,7 +106,7 @@ check_adb_state() {
 
 	no_stderr export state="`adb get-state`"
 
-	test "`adb get-state`" = "device" || adb_state_invalid
+	no_stderr [ "`adb get-state`" = "device" ] || adb_state_invalid
 }
 
 

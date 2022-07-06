@@ -33,6 +33,10 @@ no_stderr ${action:=$1}
 #
 # package:com.android.bluetooth
 # etc ...
+#
+# by default, pkg_list file will be located in
+# the $HOME directory, however this can be changed
+# by setting env variable "pkg_list"
 [ -n "$pkg_list" ] || pkg_list="$HOME/pkg.list"
 
 
@@ -148,7 +152,7 @@ check_action() {
 # perform [requested] action
 do_action() {
 	case "$action" in
-		debloat) no_out adb shell pm uninstall --user 0 $curr_apk ;;
+		debloat) no_out adb shell pm uninstall $curr_apk || no_out adb shell pm uninstall --user 0 $curr_apk ;;
 		restore) no_out adb shell cmd package install-existing $curr_apk ;;
 	esac
 }

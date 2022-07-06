@@ -1,11 +1,12 @@
 # android-debloater
 
-A minimal POSIX shell script to assist in debloating android devices.
+>A minimal POSIX shell script to assist in debloating android devices.
 
-*requires POSIX-compliant shell*
+**NOTE:**
 
+*requires _POSIX-compliant_ shell!*
 
-
+#
 1) Install ADB
 
 ```
@@ -17,7 +18,7 @@ A minimal POSIX shell script to assist in debloating android devices.
 
 
 
-
+#
 2) Enable USB Debugging
 
 - Figure out device model
@@ -26,16 +27,24 @@ A minimal POSIX shell script to assist in debloating android devices.
 
 
 
-
+#
 3) Curate your own debloat-list
 
 - Do some research on which apk files are high-risk and/or unnecessary
 - Find debloat-lists which others have created, for your device (be careful!)
 
+**NOTE:**
+
+*packages within pkg_list file, are of the following format:*
+
+[package:]com.android.chrome
+
+...
 
 
 
 
+#
 4) Initiate a wireless/USB ADB connection between android device and computer
 
 - Connect android device to computer via USB cable
@@ -44,7 +53,7 @@ A minimal POSIX shell script to assist in debloating android devices.
 
 
 
-
+#
 5) Run the script
 
 ```
@@ -52,7 +61,7 @@ A minimal POSIX shell script to assist in debloating android devices.
 ```
 
 
-
+#
 pkg_list - variable containing the path to packages file
 
 debloat - debloats packages within pkg_list

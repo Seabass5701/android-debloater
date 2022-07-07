@@ -130,13 +130,13 @@ get_apk_all() {
 
 # obtain the number of apks included within apk list
 get_linecount() {
-	no_stderr export linecount="`get_apk_all | wc -l`"
+	no_stderr export linecount="`get_apk_all | wc --lines`"
 }
 
 
 # obtain the current apk in the list
 get_apk_curr() {
-	curr_apk="`get_apk_all | sed -n "$i"p`" && \
+	curr_apk="`get_apk_all | sed --silent "$i"p`" && \
 		export curr_apk=${curr_apk##package:}
 }
 

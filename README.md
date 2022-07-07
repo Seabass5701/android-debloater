@@ -7,6 +7,10 @@
 *requires _POSIX-compliant_ shell!*
 
 ##
+This script aims to be simple, small, quick and efficient.
+
+It simply **just** debloats applications, or restores them (if necessary).
+##
 1) Install ADB
 
 ```

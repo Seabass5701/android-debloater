@@ -9,7 +9,7 @@
 #
 # rather than having a predefined list of apks labeled as bloatware, this
 # script allows the user to pass a text-file in the working directory of the
-# script, with the name pkg.list (or with the value of var: pkg_list)
+# script, with the predefined name pkg.list (or set to the value of pkg_list var)
 #
 # if you are unfamiliar with the process of debloating, please do a web-search
 # on suspect packages, before deleting them, as there are often explanations of

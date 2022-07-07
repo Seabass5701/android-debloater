@@ -97,7 +97,7 @@ adb_state_invalid() {
 
 # check whether adb can be ran
 check_adb() {
-	[ -e "$HOME/.local/platform-tools/adb" ] || [ -e "/usr/local/bin/adb" ] || [ -e "/usr/bin/adb" ] || adb_not_found
+	[ -x "$HOME/.local/platform-tools/adb" ] || [ -x "/usr/local/bin/adb" ] || [ -x "/usr/bin/adb" ] || adb_not_found
 }
 
 

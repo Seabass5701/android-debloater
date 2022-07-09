@@ -81,7 +81,7 @@ dev_not_connected() {
 
 # return error when no apk list is found, containing the list of apk files to remove
 apk_list_not_found() {
-	echo "invalid apk_list (or no apk list was passed to the script)\n\n{ $0 ${action} \$apk_list; }\n\n1)run (adb shell pm list packages) to fetch apk list,\n2)add those apks you wish to ${action} into an apk-file list, or pass [those] apks directly to the script\n\n3)to add them to a file, run:\n\nexport apk_list=\"<path_to_file>\"\n(adb shell pm list packages) > \"\$apk_list\"" >&2
+	echo "invalid apk_list (or no apk list was passed to the script)\n\n{ $0 ${action} [<apk_list>]; }\n\n1)run (adb shell pm list packages) to fetch apk list,\n2)add those apks you wish to ${action} into an apk-file list, or pass [them] as arguments after [<action>] directly to the script\n\n3)to add apks to a file, run: (adb shell pm list packages) > \"<path_to_file>\"\n4)to pass as args, run: { $0 ${action} [apk [apk1]...]; },\nwhere \"apk\" is an apk filename (i.e com.android.bluetooth, com.android.chrome, etc..)" >&2
 	return 1
 }
 

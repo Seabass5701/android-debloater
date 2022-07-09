@@ -32,8 +32,7 @@ no_stderr ${action:="$1"}
 
 # by default, the "apk_list" variable will be set to the second argument passed to script ($2).
 #
-# apks you wish to delete from your device,
-# may be placed here within this file
+# apks you wish to delete from your device, may be placed here within this file
 #
 # format: [package:]com.android.bluetooth
 #         [package:]com.android.chrome
@@ -234,8 +233,7 @@ post_action() {
 }
 
 
-# perform action on each apk included within apk list,
-# sequentially.
+# perform action on each apk included within apk list, sequentially.
 do_action_apks() {
 	i=0
 

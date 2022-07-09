@@ -8,13 +8,16 @@
 # highly recommended before proceeding further.
 #
 # rather than having a predefined list of apks labeled as bloatware, this
-# script allows the user to pass a text-file in the working directory of the
-# script, with the predefined name pkg.list (or set to the value of pkg_list var)
+# script allows the user to pass a text-file (containing the list of apks),
+# or the name(s) of package(s) passed as the second argument to the script.
 #
 # if you are unfamiliar with the process of debloating, please do a web-search
 # on suspect packages, before deleting them, as there are often explanations of
-# (otherwise unknown) apks, which may be found on your Android device.
+# (otherwise unknown) apks, which may be found on your android device.
 
+
+completed=0
+missed=0
 
 
 # silence output (to stdout(1) & stderr(2), or both)
@@ -23,67 +26,70 @@ no_stderr() { $@ 2>/dev/null; }
 no_out() { $@ 1>/dev/null 2>/dev/null; }
 
 
-# by default, the "action" variable will be
-# set to the first argument passed to script ($1).
-no_stderr ${action:=$1}
+# by default, the "action" variable will be set to the first argument passed to script ($1).
+no_stderr ${action:="$1"}
 
 
-# all apk files (which are to be removed)
-# will be kept here, in the following format:
+# by default, the "apk_list" variable will be set to the second argument passed to script ($2).
 #
-# package:com.android.bluetooth
-# etc ...
+# apks you wish to delete from your device,
+# may be placed here within this file
 #
-# by default, pkg_list file will be located in
-# the $HOME directory, however this can be changed
-# by setting env variable "pkg_list"
-[ -n "$pkg_list" ] || pkg_list="$HOME/pkg.list"
+# format: [package:]com.android.bluetooth
+#         [package:]com.android.chrome
+#         ...
+#
+# OR
+#
+# passed directly to the script as arguments
+#
+# format: android_debloater.sh debloat \
+#                 com.android.bluetooth \
+#                 com.android.chrome \
+#                 ...
+no_stderr ${apk_list:="`echo $@ | sed "s/$1 //"`"}
+
 
 
 
 # display help
 display_help() {
-	echo "usage: \`env [pkg_list=\"<uri-path to file>\"] $0 [<action>]\`\n\nenv variables:\npkg_list - path to pkg_list file\n\nActions:\ndebloat - remove packages\nrestore - restore [deleted] packages\nhelp - display this menu"
+	echo "usage: { $0 [<action>] [<apk_list>]; }\n\nActions:\ndebloat - remove packages\nrestore - restore [deleted] packages\nhelp - display [this] help-menu"
 	return 1
 }
 
 
-# return error when action is not recognized
-# by the script
+# return error when action is not recognized by the script
 action_not_found() {
-	echo "invalid action [or no argument was passed to command-line]\nvalid actions: <debloat|restore|help>" >&2
+	echo "invalid action (or no [first] argument was passed to script)\nto view valid options: { $0 help; }" >&2
 	return 1
 }
 
 
-# return error when adb is not installed
-# (or added to runtime exec-path)
+# return error when adb is not installed (or added to runtime exec-path)
 adb_not_found() {
 	echo "adb could not be found" >&2
 	return 1
 }
 
 
-# return error when no device is recognizable
-# by, or connected to adb
+# return error when no device is recognizable by, or connected to adb
 dev_not_connected() {
-	echo "check that android device is:\n\n1): turned on\n2): plugged into your pc (via usb)\n3): connected to your pc (via adb w/ usb debugging enabled)" >&2
+	echo "check that android device is:\n\n1)turned on\n2)plugged into your pc (via usb)\n3)connected to your pc (via adb w/ usb debugging enabled)" >&2
 	exit 1
 }
 
 
-# return error when no package list is found,
-# containing the list of apk files to remove
-pkg_list_not_found() {
-	echo "a package list containing the list of apks you wish to remove/restore has not been found:\n\n1): run \`adb shell pm list packages\` to obtain apk list\n2): add the apks you wish to remove/restore to \"$pkg_list\"\n\n(to change package list filename, \`env pkg_list=\"<path-to-file>\" $0 [restore|debloat]\`)\n(to fetch the package list from a device directly, and transfer it to a textfile, \`(adb shell pm list packages) > \"<path-to-file>\"\`)" >&2
+# return error when no apk list is found, containing the list of apk files to remove
+apk_list_not_found() {
+	echo "invalid apk_list (or no apk list was passed to the script)\n\n{ $0 ${action} \$apk_list; }\n\n1)run (adb shell pm list packages) to fetch apk list,\n2)add those apks you wish to ${action} into an apk-file list, or pass [those] apks directly to the script\n\n3)to add them to a file, run:\n\nexport apk_list=\"<path_to_file>\"\n(adb shell pm list packages) > \"\$apk_list\"" >&2
 	return 1
 }
 
 
-# return error when package list file is
-# improperly formatted
-pkg_list_invalid_format() {
-	echo "package list found, however the file is likely improperly-formatted (or empty).\npackages listed inside of \"$pkg_file\", should have the format:\n[package:]com.android.chrome" >&2
+# return error when package list file is improperly formatted
+apk_list_invalid_format() {
+	echo "apk list found, however the file is likely improperly-formatted (or empty), or the apks passed were erroneous.\npackages listed inside of \"$pkg_file\", should have the format:\n[package:]com.android.chrome\n[package:]com.android.bluetooth\n...\n\npackages passed as arguments should have the format: com.android.chrome com.android.bluetooth ..." >&2
 	return 1
 }
 
@@ -95,48 +101,84 @@ adb_state_invalid() {
 }
 
 
+# return error when apk can not be found (for de-installation)
+apk_not_found() {
+	echo "[-] error [$i/$linecount]: $curr_apk not found.." >&2
+	return 1
+}
+
+
+# return error when main action/process fails
+do_action_failed() {
+	echo "no apks were ${action%%e}ed.." >&2
+	return 1
+}
+
+
+# start the adb daemon
+start_adb() { no_out adb start-server; }
+
+
+# shutdown the adb daemon
+shutdown_adb() { no_stdout adb disconnect && adb kill-server; }
+
+
 # check whether adb can be ran
 check_adb() {
-	[ -x "$HOME/.local/platform-tools/adb" -o -x "/usr/local/bin/adb" -o -x "/usr/bin/adb" ] || adb_not_found
+	[ -x "/usr/local/bin/adb" -o -x "/usr/bin/adb" -o -x "$HOME/.local/platform-tools/adb" ] || adb_not_found
 }
 
 
 # check adb (connection) state
 check_adb_state() {
-	# start the adb daemon
-	no_out adb start-server
+	start_adb
 
 	no_out adb get-state || dev_not_connected
 
 	no_stderr export state="`adb get-state`"
-
+		
 	no_stderr [ "`adb get-state`" = "device" ] || adb_state_invalid
 	
 	unset state
 }
 
 
-# check pkg_list
-check_pkg_list() {
-	[ -f "$pkg_list" ] || pkg_list_not_found
+# check apk_list
+check_apk_list() {
+	[ -f "$apk_list" -o -n "$apk_list"  ] || apk_list_not_found
 }
 
 
 # obtain (all) apks included within apk list
-get_apk_all() {
-	no_stderr grep '^[package:?.*$]' $pkg_list || pkg_list_invalid_format
+get_apk_list() {
+	cat $apk_list | grep '^[package:?.*$]' | sed "s/[[:space:]]/\n/g" || apk_list_invalid_format
+}
+
+
+# obtain (all) apks from the device itself
+get_apk_list_dev() {
+	case "$action" in
+		debloat) adb shell pm list packages ;;
+	        restore) adb shell pm list packages -u ;;	
+	esac
+}
+
+
+# check for validity of apk (before action)
+check_apk() {
+	get_apk_list_dev | grep "$curr_apk" || apk_not_found
 }
 
 
 # obtain the number of apks included within apk list
-get_linecount() {
-	no_stderr export linecount="`get_apk_all | wc --lines`"
+get_apk_list_linecount() {
+	no_stderr export linecount="`get_apk_list | wc --lines`"
 }
 
 
 # obtain the current apk in the list
 get_apk_curr() {
-	curr_apk="`get_apk_all | sed --silent "$i"p`" && \
+	curr_apk="`get_apk_list | sed --silent "$i"p`" && \
 		export curr_apk=${curr_apk##package:}
 }
 
@@ -162,41 +204,67 @@ do_action() {
 
 # return success msg
 action_success() {
-	echo "[+] successfully ${action%%e}ed: $curr_apk [$i/$linecount]"
+	echo "[+] successfully ${action%%e}ed [$i/$linecount]: $curr_apk"
 }
 
 
 # return error msg
 action_error() {
-	echo "[-] error ${action%%e}ing: $curr_apk [$i/$linecount]" >&2
+	echo "[-] error ${action%%e}ing [$i/$linecount]: $curr_apk" >&2
+}
+
+
+# perform postrequisite actions
+post_action() {
+	[ $completed -gt 0 ] && {
+		echo "${action} completed successfully!\n\napks ${action%%e}ed: $completed\napks not ${action%%e}ed: $missed\n\n"
+		sleep 1
+
+		# reboot device
+		echo "rebooting device.."
+		adb reboot
+	} || { do_action_failed; }
+
+	shutdown_adb
+
+	unset action linecount curr_apk apk_list
+
+	echo "press any key to exit..."
+	read blank
 }
 
 
 # perform action on each apk included within apk list,
 # sequentially.
 do_action_apks() {
-	i=0 && {
-		until [ $i -eq $linecount ]; do
-			i=$((i + 1))
-			get_apk_curr && do_action && action_success || action_error
-		done
-	};
-	
-	unset action linecount curr_apk pkg_list
+	i=0
+
+	until [ $i -eq $linecount ]; do
+		i=$((i + 1))
+		get_apk_curr
+		no_stdout check_apk && (do_action && action_success || action_error) && \
+			export completed=$((completed + 1)) || \
+			export missed=$((missed + 1))
+	done
+
+	post_action
 }
 
 
 precheck() {
-	(check_action && check_adb && check_adb_state && check_pkg_list)
+	(check_action && check_apk_list && check_adb && check_adb_state)
 }
 
 
 begin_action() {
-	(no_stdout get_apk_all && get_linecount && do_action_apks)
+	(no_stdout get_apk_list && get_apk_list_linecount && do_action_apks)
 }
 
 
 do_all() {
 	(precheck && begin_action)
 }
+
+trap 'post_action' HUP INT ILL ABRT KILL TRAP PWR
+
 do_all

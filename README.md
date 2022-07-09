@@ -36,22 +36,38 @@ It simply **just** debloats applications, or restores them (if necessary).
 - Do some research on which apk files are high-risk and/or unnecessary
 - Find debloat-lists which others have created, for your device (be careful!)
 
-*to transfer list of packages to a file:*
+*to transfer list of apks to a file:*
 
 ```
-    (adb shell pm list packages) > "<path_to_pkg_list>"
+    (adb shell pm list packages) > "<path_to_apk_list>"
 ```
 
 Afterwards, you may leave **only** *_the packages you wish to delete_*,
 commenting out ones you wish to save (if necessary) or removing them.
 
+*to pass apks to the script as argument:*
+
+```
+    ./android_debloater.sh debloat \
+            [package:]com.android.chrome \
+            [package:]com.android.bluetooth \
+            [...]
+```
+
 **NOTE:**
 
-*packages within pkg_list file, must have the following format:*
+*apks within apk_list file, must have the following format:*
 
 [package:]com.android.chrome
 
-...
+[package:]com.android.bluetooth
+
+[...]
+
+*apks passed as arguments to the script, must have the following format:*
+
+[package:]com.android.chrome [package:]com.android.bluetooth [...]
+
 ##
 4) Initiate a wireless/USB ADB connection between android device and computer
 
@@ -63,11 +79,11 @@ commenting out ones you wish to save (if necessary) or removing them.
 5) Run the script
 
 ```
-    env pkg_list="<path-to-file>" android-debloater.sh [debloat|restore|help]
+    android-debloater.sh [<action>] [<apk_list>]
 ```
 
 
-pkg_list - variable containing the path to packages file
+apk_list - path to apk file list / apks passed to the script after action
 
 debloat - debloats packages within pkg_list
 

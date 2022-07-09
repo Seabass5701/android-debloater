@@ -46,7 +46,7 @@ no_stderr ${action:="$1"}
 #                 com.android.bluetooth \
 #                 com.android.chrome \
 #                 ...
-no_stderr ${apk_list:="`echo $@ | sed "s/$1 //"`"}
+no_stderr ${apk_list:=${@##$1}}
 
 
 

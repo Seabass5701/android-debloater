@@ -94,6 +94,18 @@
 </details>
 
 ####
+<details><summary>4) Clone the repo</summary>
+   
+   #####
+   ```shell
+      git clone https://github.com/Seabass5701/android-debloater
+      
+      cd android-debloater
+   
+      chmod u+x android_debloater.sh
+   ```
+   #####
+</details>
 
 ## Usage
 

@@ -124,9 +124,7 @@ help    - displays a help-menu
 
    ```shell
       [package:]com.android.chrome
-
       [package:]com.android.bluetooth
-
       [...]
    ```
    

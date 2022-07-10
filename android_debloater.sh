@@ -107,13 +107,6 @@ apk_not_found() {
 }
 
 
-# return error when main action/process fails
-do_action_failed() {
-	echo "no apks were ${action%%e}ed.." >&2
-	return 1
-}
-
-
 # start the adb daemon
 start_adb() { no_out adb start-server; }
 
@@ -213,31 +206,21 @@ action_error() {
 }
 
 
-# reboot device
-reboot_device() {
-	echo "rebooting device.."
-	sleep .5
-	adb reboot
-}
-
-
-# actions performed before script is finished
-finish() {
-	shutdown_adb
-
-	unset action linecount curr_apk apk_list missed completed i
-}
-
-
 # perform postrequisite actions
 post_action() {
 	[ $completed -gt 0 ] && {
 		echo "\n${action} completed successfully!\n\napks ${action%%e}ed: $completed\napks not ${action%%e}ed: $missed\n\n"
 		sleep 1
-		reboot_device
-	} || { do_action_failed; };
-
-	finish
+		
+		# reboot device
+		echo "rebooting device.."
+		sleep .5
+		adb reboot
+	} || { echo "apks failed to ${action}..\n\napks not ${action%%e}ed: $missed\n\n" >&2; };
+		
+	shutdown_adb
+	
+	unset action linecount curr_apk apk_list missed completed i
 
 	echo "press any key to exit..."
 	(read blank)

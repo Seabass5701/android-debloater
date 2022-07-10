@@ -225,7 +225,7 @@ reboot_device() {
 finish() {
 	shutdown_adb
 
-	unset action linecount curr_apk apk_list
+	unset action linecount curr_apk apk_list missed completed i
 }
 
 

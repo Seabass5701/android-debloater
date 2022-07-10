@@ -88,7 +88,7 @@ apk_list_not_found() {
 
 # return error when package list file is improperly formatted
 apk_list_invalid_format() {
-	echo "apk list found, however the file is likely improperly-formatted (or empty), or the apks passed were erroneous.\npackages listed inside of \"$pkg_file\", should have the format:\n[package:]com.android.chrome\n[package:]com.android.bluetooth\n...\n\npackages passed as arguments should have the format: com.android.chrome com.android.bluetooth ..." >&2
+	echo "apk list found, however the file is likely improperly-formatted, or the apks passed were of an erroneous format.\npackages listed inside of \"$pkg_file\", should have the format:\n[package:]com.android.chrome\n[package:]com.android.bluetooth\n...\n\npackages passed as arguments should have the format: com.android.chrome com.android.bluetooth ..." >&2
 	return 1
 }
 
@@ -144,19 +144,19 @@ check_adb_state() {
 
 # check apk_list
 check_apk_list() {
-	[ -f "$apk_list" -o -n "$apk_list"  ] || apk_list_not_found
+	[ -n "$apk_list" -o -f "$apk_list"  ] || apk_list_not_found
 }
 
 
 # obtain (all) apks included within apk list
 get_apk_list() {
-	cat $apk_list | grep '^[package:?.*$]' | sed "s/[[:space:]]/\n/g" || apk_list_invalid_format
+	cat $apk_list | sed 's/[[:space:]]/\n/g' | grep '^[package:]\?[a-z*\.\{1\}]*[a-z*]$' || apk_list_invalid_format
 }
 
 
 # obtain (all) apks from the device itself
 get_apk_list_dev() {
-	case "$action" in
+	case ${action} in
 		debloat) adb shell pm list packages ;;
 	        restore) adb shell pm list packages -u ;;	
 	esac
@@ -184,7 +184,7 @@ get_apk_curr() {
 
 # check action being performed
 check_action() {
-	case "$action" in
+	case ${action} in
 		debloat|restore) continue ;;
 		           help) display_help ;;
 			      *) action_not_found ;;
@@ -194,7 +194,7 @@ check_action() {
 
 # perform [requested] action
 do_action() {
-	case "$action" in
+	case ${action} in
 		debloat) no_out adb shell pm uninstall $curr_apk || no_out adb shell pm uninstall --user 0 $curr_apk ;;
 		restore) no_out adb shell cmd package install-existing $curr_apk ;;
 	esac
@@ -221,6 +221,7 @@ post_action() {
 
 		# reboot device
 		echo "rebooting device.."
+		sleep .5
 		adb reboot
 	} || { do_action_failed; }
 
@@ -229,7 +230,7 @@ post_action() {
 	unset action linecount curr_apk apk_list
 
 	echo "press any key to exit..."
-	read blank
+	(read blank)
 }
 
 

@@ -2,91 +2,171 @@
 
 >A minimal POSIX shell script to assist in debloating android devices.
 
-**NOTE:**
+#### **\*NOTE:  _POSIX-compliant_ shell required!\*** ####
+####
 
-*requires _POSIX-compliant_ shell!*
 
-##
-This script aims to be simple, small, quick and efficient.
+## Overall Scope
 
-It simply **just** debloats applications, or restores them (if necessary).
-##
-1) Install ADB
+### This script aims to be:
+   - small (written in a little over 200-lines)
+   - simple (not overly complex, but gets the job done)
+   - quick (written in dash, which runs faster than bash)
+   - efficient (quite performant, given its size and simplicity)
+###
 
-```
-   curl --remote-name --location "https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
-   mkdir "$HOME/.local"
-   unzip "platform-tools-latest-linux.zip" -d "$HOME/.local"
-   export PATH="$PATH:$HOME/.local/platform-tools"
+### It simply does *_two_* things:
+   - debloats
+   - restores
+###
+
+### It can read apks:
+   - from a file
+   - passed as arguments to the script after [<action\>]
+   
+###
+
+## Getting Started
+
+####
+
+<details><summary>1) Install ADB</summary>
+   
+   #####
+   - Download ADB
+   ```shell
+      curl --remote-name --location "https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
    ```
-##
-2) Enable USB Debugging
+   
+   #####
+   - Extract to an *_appropriate_* directory
+   ```shell
+      export adb_dir="$HOME/.local"
+   
+      mkdir --parents "$adb_dir"
+      
+      unzip "platform-tools-latest-linux.zip" -d "$adb_dir"
+   ```
+   
+   #####
+   - Adjust PATH variable (if necessary)
+```shell
+   export PATH="$PATH:$adb_dir:"
+```
+   
+   ##
+   
+</details>
 
+####
+<details><summary>2) Enable USB Debugging</summary>
+   
+   #####
+   - Go into the "Settings" app on your device
+   #####
+   - Go to "About" / "About-Phone
+   #####
+   - Go to "Software Information"
+   #####
+   - Tap "Build Number" 5 times consecutively, until Developer Mode is enabled
+   #####
+   - Go to "Developer Settings"
+   #####
+   - Toogle "USB Debugging" On
+   #####
+   
+   ##
+   
+</details>
 
-- Entering the "Settings" app on your device
-- Navigate to "About" > "Software Information"
-- Tap "Build Number" 5 times, until Developer Mode is enabled
-- Navigate to "Developer Settings"
-- Toggle "USB Debugging" on
+####
+<details><summary>3) Initiate a Wireless/USB ADB-connection between android device and computer</summary>
 
+   ### **after enabling USB Debugging**
 
-##
-3) Curate your own debloat-list
+   #####
+   - Connect android device to computer via USB cable
+   #####
+   - Authorize connection to computer from your device
+   
+   ##
+   
+</details>
 
-- Do some research on which apk files are high-risk and/or unnecessary
-- Find debloat-lists which others have created, for your device (be careful!)
+####
 
-*to transfer list of apks to a file:*
+## Usage
 
 ```
-    (adb shell pm list packages) > "<path_to_apk_list>"
-```
-
-Afterwards, you may leave **only** *_the packages you wish to delete_*,
-commenting out ones you wish to save (if necessary) or removing them.
-
-*to pass apks to the script as argument:*
-
-```
-    ./android_debloater.sh debloat \
-            [package:]com.android.chrome \
-            [package:]com.android.bluetooth \
-            [...]
-```
-
-**NOTE:**
-
-*apks within apk_list file, must have the following format:*
-
-[package:]com.android.chrome
-
-[package:]com.android.bluetooth
-
-[...]
-
-*apks passed as arguments to the script, must have the following format:*
-
-[package:]com.android.chrome [package:]com.android.bluetooth [...]
-
-##
-4) Initiate a wireless/USB ADB connection between android device and computer
-
-**after enabling USB Debugging**
-
-- Connect android device to computer via USB cable
-- Authorize connection to computer from your device
-##
-5) Run the script
-
-```
-    android-debloater.sh [<action>] [<apk_list>]
+    android_debloater.sh [<action>] [<apk_list>]
 ```
 
 
 apk_list - path to apk file list / apks passed to the script after action
 
-debloat - debloats packages within pkg_list
+debloat - debloats packages within apk_list
 
-restore - restores [deleted] packages within pkg_list
+restore - restores [deleted] packages within apk_list
 
 help    - displays a help-menu
+
+## Optional (Create your own debloat-list)
+   
+   ### *to transfer list of apks to a file:*
+   
+   ```shell
+    (adb shell pm list packages) > "<path_to_apk_list>"
+   ```
+   
+   **NOTE:**
+   
+   *apks within apk_list file, must have the following format:*
+
+   ```shell
+      [package:]com.android.chrome
+
+      [package:]com.android.bluetooth
+
+      [...]
+   ```
+   
+   Afterwards, you may leave **only** *_the packages you wish to delete_*,
+   commenting out ones you wish to save (if necessary) or removing them.
+
+   ##
+   
+   ### *to pass apks to the script as argument:*
+
+   ```shell
+    ./android_debloater.sh debloat \
+            [package:]com.android.chrome \
+            [package:]com.android.bluetooth \
+            [...]
+   ```
+   
+   **NOTE:**
+   
+   *apks passed as arguments to the script, must have the following format:*
+
+   ```shell
+      [package:]com.android.chrome [package:]com.android.bluetooth [...]
+   ```
+
+   ##
+   
+   ####
+   - Do some research on which apk files are high-risk and/or unnecessary
+
+   ####
+   - Find debloat-lists which others have created, for your device (**be careful!**)
+   
+   ####
+
+
+
+
+
+   
+
+   
+   

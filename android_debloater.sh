@@ -224,7 +224,7 @@ post_action() {
 		echo "rebooting device.."
 		sleep .5
 		adb reboot
-	} || { echo "apks failed to ${action}..\n\napks not ${action%%e}ed: $missed\n\n" >&2; };
+	} || { echo "\napks failed to ${action}..\n\napks not ${action%%e}ed: $missed\n\n" >&2; };
 		
 	shutdown_adb
 	
@@ -265,6 +265,6 @@ do_all() {
 	(precheck && begin_action)
 }
 
-trap 'finish' HUP INT PWR ILL ABRT KILL TRAP
+trap 'shutdown_adb; unset action linecount curr_apk apk_list missed completed i;' HUP INT
 
 do_all

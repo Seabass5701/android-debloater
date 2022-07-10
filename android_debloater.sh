@@ -108,11 +108,11 @@ apk_not_found() {
 
 
 # start the adb daemon
-start_adb() { no_out adb start-server; }
+start_adb() { echo "starting adb server..."; sleep .5; no_out adb start-server && echo "success"; }
 
 
 # shutdown the adb daemon
-shutdown_adb() { no_stdout adb disconnect && adb kill-server; }
+shutdown_adb() { echo "shutting down adb server..."; sleep .5; no_stdout adb disconnect && adb kill-server && echo "success"; }
 
 
 # check whether adb can be ran

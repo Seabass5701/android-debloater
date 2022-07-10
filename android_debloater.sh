@@ -88,7 +88,7 @@ apk_list_not_found() {
 
 # return error when package list file is improperly formatted
 apk_list_invalid_format() {
-	echo "apk list found, however the file is likely improperly-formatted, or the apks passed were of an erroneous format.\npackages listed inside of \"$pkg_file\", should have the format:\n[package:]com.android.chrome\n[package:]com.android.bluetooth\n...\n\npackages passed as arguments should have the format: com.android.chrome com.android.bluetooth ..." >&2
+	echo "apk list found, however the file is likely improperly-formatted, or the apks passed were of an erroneous format.\n\n\npackages listed inside of pkg_file, should have the format:\n\n[package:]com.android.chrome\n[package:]com.android.bluetooth\n...\n\npackages passed as arguments should have the format:\n\ncom.android.chrome com.android.bluetooth ..." >&2
 	return 1
 }
 
@@ -150,7 +150,7 @@ check_apk_list() {
 
 # obtain (all) apks included within apk list
 get_apk_list() {
-	cat $apk_list | sed 's/[[:space:]]/\n/g' | grep '^[package:]\?[a-z*\.\{1\}]*[a-z*]$' || apk_list_invalid_format
+	(no_stderr cat $apk_list || echo $apk_list) | sed 's/[[:space:]]/\n/g' | grep '^\(package:\)\?\([a-z]\+[\.]\{1\}\)\+[a-z]\+$' || apk_list_invalid_format
 }
 
 
@@ -213,21 +213,31 @@ action_error() {
 }
 
 
-# perform postrequisite actions
-post_action() {
-	[ $completed -gt 0 ] && {
-		echo "${action} completed successfully!\n\napks ${action%%e}ed: $completed\napks not ${action%%e}ed: $missed\n\n"
-		sleep 1
+# reboot device
+reboot_device() {
+	echo "rebooting device.."
+	sleep .5
+	adb reboot
+}
 
-		# reboot device
-		echo "rebooting device.."
-		sleep .5
-		adb reboot
-	} || { do_action_failed; }
 
+# actions performed before script is finished
+finish() {
 	shutdown_adb
 
 	unset action linecount curr_apk apk_list
+}
+
+
+# perform postrequisite actions
+post_action() {
+	[ $completed -gt 0 ] && {
+		echo "\n${action} completed successfully!\n\napks ${action%%e}ed: $completed\napks not ${action%%e}ed: $missed\n\n"
+		sleep 1
+		reboot_device
+	} || { do_action_failed; };
+
+	finish
 
 	echo "press any key to exit..."
 	(read blank)
@@ -251,12 +261,12 @@ do_action_apks() {
 
 
 precheck() {
-	(check_action && check_apk_list && check_adb && check_adb_state)
+	(check_action && check_apk_list && no_stdout get_apk_list && check_adb && check_adb_state)
 }
 
 
 begin_action() {
-	(no_stdout get_apk_list && get_apk_list_linecount && do_action_apks)
+	(get_apk_list_linecount && do_action_apks)
 }
 
 
@@ -264,6 +274,6 @@ do_all() {
 	(precheck && begin_action)
 }
 
-trap 'post_action' HUP INT ILL ABRT KILL TRAP PWR
+trap 'finish' HUP INT PWR ILL ABRT KILL TRAP
 
 do_all

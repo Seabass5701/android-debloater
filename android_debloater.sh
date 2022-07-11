@@ -272,6 +272,6 @@ do_all() {
 	(precheck && begin_action)
 }
 
-trap 'shutdown_adb; unset action linecount curr_apk apk_list missed completed i;' HUP INT
+trap '[ -n "`pgrep adb`" ] && shutdown_adb; unset action linecount curr_apk apk_list missed completed i;' HUP INT
 
 do_all

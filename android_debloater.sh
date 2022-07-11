@@ -237,7 +237,7 @@ post_action() {
 	
 	unset action linecount curr_apk apk_list missed completed i
 
-	echo "press any key to exit..."
+	echo -n "press any key to exit... "
 	(read blank)
 }
 

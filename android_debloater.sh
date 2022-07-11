@@ -151,7 +151,7 @@ check_apk_list() {
 
 # obtain (all) apks included within apk list
 get_apk_list() {
-	(no_stderr cat $apk_list || echo $apk_list) | sed 's/[[:space:]]/\n/g' | grep '^\(package:\)\?\([A-Z\*a-z\_\*]\+[\.]\{1\}\)\+[A-Z\*a-z\_\*]\+$' || apk_list_invalid_format
+	(no_stderr cat $apk_list || echo $apk_list) | sed 's/[[:space:]]/\n/g' | grep '^\(package:\)\?\([A-Z\*a-z\_\*0-9\*]\+[\.]\{1\}\)\+[A-Z\*a-z\_\*0-9\*]\+$' || apk_list_invalid_format
 }
 
 

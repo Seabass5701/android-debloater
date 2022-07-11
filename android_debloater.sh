@@ -53,7 +53,7 @@ no_stderr ${apk_list:=${@##$1[[:space:]]}}
 
 # display help
 display_help() {
-	echo "usage: { $0 [<action>] [<apk_list>]; }\n\nActions:\ndebloat - remove packages\nrestore - restore [deleted] packages\nhelp - display [this] help-menu"
+	echo "usage: { $0 [<action>] [<apk_list>]; }\n\nactions:\ndebloat - remove packages\nrestore - restore [deleted] packages\nhelp - display [this] help-menu\n\napk_list - [path to a file containing list of apks] OR\n           [list of apks passed as arguments to the script]"
 	return 1
 }
 
@@ -81,14 +81,14 @@ dev_not_connected() {
 
 # return error when no apk list is found, containing the list of apk files to remove
 apk_list_not_found() {
-	echo "no apk list was passed to the script\n\n{ $0 ${action} [<apk_list>]; }\n\n\n1)run (adb shell pm list packages) to fetch apk list,\n\n2)add those apks you wish to ${action} into an apk-file list, or pass [them] as arguments after [<action>] directly to the script\n\n3)to add apks to a file, run: (adb shell pm list packages) > \"<path_to_file>\"\n\n4)to pass as args, run: { $0 ${action} [apk [apk1]...]; },\nwhere \"apk\" is an apk filename (i.e com.android.bluetooth, com.android.chrome, etc..)" >&2
+	echo "no apk list was passed to the script\n\n{ $0 ${action} [<apk_list>]; }\n\n\n1)run (adb shell pm list packages) to fetch apk list,\n\n2)add those apks you wish to ${action} into an apk-file list (commenting out those you wish to exclude), or pass [them] as arguments after [<action>] directly to the script\n\n3)to add apks to a file, run: (adb shell pm list packages) > \"<path_to_file>\"\n\n4)to pass as args, run: { $0 ${action} [apk [apk1]...]; },\nwhere \"apk\" is an apk filename (i.e com.android.bluetooth, com.android.chrome, etc..)" >&2
 	return 1
 }
 
 
 # return error when package list file is improperly formatted
 apk_list_invalid_format() {
-	echo "apk list found, however the file is likely improperly-formatted, or the apks passed were of an erroneous format.\n\n\npackages listed inside of pkg_file, should have the format:\n\n[package:]com.android.chrome\n[package:]com.android.bluetooth\n...\n\npackages passed as arguments should have the format:\n\ncom.android.chrome com.android.bluetooth ..." >&2
+	echo "apk list found, however the file is likely improperly-formatted, or the apks passed were of an erroneous format.\n\n\npackages listed inside of apk_file, should have the format:\n\n[package:]com.android.chrome\n[package:]com.android.bluetooth\n...\n\npackages passed as arguments should have the format:\n\ncom.android.chrome com.android.bluetooth ..." >&2
 	return 1
 }
 

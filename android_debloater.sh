@@ -46,9 +46,14 @@ no_stderr ${action:="$1"}
 #                 com.android.bluetooth \
 #                 com.android.chrome \
 #                 ...
-no_stderr ${apk_list:=${@##$1[[:space:]]}}
 
 
+# if (at-least) two arguments
+[ -n "$1" -a -n "$2" ] && \
+        # remove first arg + space after first arg
+	no_stderr ${apk_list:=${@##$1[[:space:]]}} || \
+	# else (if < 2 args) only remove first arg
+	no_stderr ${apk_list:=${@##$1}}
 
 
 # display help
@@ -174,13 +179,13 @@ check_apk() {
 
 # obtain the number of apks included within apk list
 get_apk_list_linecount() {
-	no_stderr export linecount="`get_apk_list | wc --lines`"
+	no_stderr export linecount="`get_apk_list | uniq | wc --lines`"
 }
 
 
 # obtain the current apk in the list
 get_apk_curr() {
-	curr_apk="`get_apk_list | sed --silent "$i"p`" && \
+	curr_apk="`get_apk_list | uniq | sed --silent "$i"p`" && \
 		export curr_apk=${curr_apk##package:}
 }
 

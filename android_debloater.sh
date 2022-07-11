@@ -131,6 +131,8 @@ check_adb() {
 
 # check adb (connection) state
 check_adb_state() {
+	[ -n "`pgrep adb`" ] && shutdown_adb
+	
 	start_adb
 
 	no_out adb get-state || dev_not_connected
@@ -145,13 +147,13 @@ check_adb_state() {
 
 # check apk_list
 check_apk_list() {
-	[ -n "$apk_list" -o -f "$apk_list"  ] || apk_list_not_found
+	[ -n "$apk_list" ] || apk_list_not_found
 }
 
 
 # obtain (all) apks included within apk list
 get_apk_list() {
-	(no_stderr cat $apk_list || echo $apk_list) | sed 's/[[:space:]]/\n/g' | grep '^\(package:\)\?\([A-Z\*a-z\_\*0-9\*]\+[\.]\{1\}\)\+[A-Z\*a-z\_\*0-9\*]\+$' || apk_list_invalid_format
+	(no_stderr cat $apk_list || echo $apk_list) | sed 's/[[:space:]]/\n/g' | grep '^\(package:\)\?\([A-Z\*a-z\_\*0-9\*]\+[\.]\{1\}\)\+[A-Z\*a-z\_\*0-9\*]\+$' | uniq || apk_list_invalid_format
 }
 
 

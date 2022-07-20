@@ -30,36 +30,49 @@
 
 ####
 
-<details><summary>1) Install ADB</summary>
+<details><summary><b>1) Install ADB</b></summary>
    
    #####
-   - Download ADB
+   - Ubuntu/Debian
    ```shell
-      curl --remote-name --location "https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
+      sudo apt-get update && sudo apt-get install adb
    ```
    
-   #####
-   - Extract to an *_appropriate_* directory
+   - Arch-Linux
    ```shell
-      export adb_dir="$HOME/.local"
-   
-      mkdir --parents "$adb_dir"
-      
-      unzip "platform-tools-latest-linux.zip" -d "$adb_dir"
+      sudo pacman -S android-tools
    ```
    
-   #####
-   - Adjust PATH variable (if necessary)
-```shell
-   export PATH="$PATH:$adb_dir:"
-```
+   - Fedora
+   ```shell
+      sudo dnf install android-tools
+   ```
+   
+   - Manual Installation
+      #####
+      - Download ADB
+      ```shell
+         curl --remote-name --location "https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
+      ```
+      #####
+      - Extract to an *_appropriate_* directory
+      ```shell
+         export adb_dir="$HOME/.local"
+         mkdir "$adb_dir"
+         unzip -qq "platform-tools-latest-linux.zip" -d "$adb_dir"
+      ```
+      #####
+      - Adjust PATH variable
+      ```shell
+         export PATH="$PATH:$adb_dir/platform-tools:"
+      ```
    
    ##
    
 </details>
 
 ####
-<details><summary>2) Enable USB Debugging</summary>
+<details><summary><b>2) Enable USB Debugging</b></summary>
    
    #####
    - Go into the "Settings" app on your device
@@ -80,9 +93,7 @@
 </details>
 
 ####
-<details><summary>3) Initiate a Wireless/USB ADB-connection between android device and computer</summary>
-
-   ### **after enabling USB Debugging**
+<details><summary><b>3) Initiate ADB connection between android device and computer</b></summary>
 
    #####
    - Connect android device to computer via USB cable
@@ -94,14 +105,12 @@
 </details>
 
 ####
-<details><summary>4) Clone the repo</summary>
+<details><summary><b>4) Clone the repo</b></summary>
    
    #####
    ```shell
       git clone https://github.com/Seabass5701/android-debloater
-      
       cd android-debloater
-   
       chmod u+x android_debloater.sh
    ```
    #####
@@ -165,7 +174,10 @@ help    - displays a help-menu
    ##
    
    ####
-   - Do some research on which apk files are high-risk and/or unnecessary
+   - Do some research on which apk files are unnecessary (worthy of debloat)
+   
+   ####
+   - Determine which apk files you **need** and **dont**
 
    ####
    - Find debloat-lists which others have created, for your device (**be careful!**)

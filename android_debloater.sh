@@ -116,7 +116,7 @@ apk_not_found() {
 start_adb() {
 	printf "starting adb server...\n"
 	sleep .5
-	no_out adb start-server && printf "success\n" && sleep .5
+	no_out adb start-server && printf "success\n\n" && sleep .5
 }
 
 
@@ -124,7 +124,7 @@ start_adb() {
 shutdown_adb() {
 	printf "shutting down adb server...\n"
 	sleep .5
-	no_stdout adb disconnect && adb kill-server && printf "success\n" && sleep .5
+	no_stdout adb disconnect && adb kill-server && printf "success\n\n" && sleep .5
 }
 
 

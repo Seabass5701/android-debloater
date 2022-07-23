@@ -223,7 +223,7 @@ action_success() {
 
 # return error msg
 action_error() {
-	printf "[-] error %sing [%u/%u]: %s" "${action%%e}" "$i" "$linecount" "$curr_apk" >&2
+	printf "[-] error %sing [%u/%u]: %s\n" "${action%%e}" "$i" "$linecount" "$curr_apk" >&2
 }
 
 

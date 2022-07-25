@@ -130,10 +130,10 @@ shutdown_adb() {
 
 # check whether adb can be ran
 check_adb() {
-	[ -x "/usr/local/bin/adb" ] \
-		|| [ -x "/usr/bin/adb" ] \
-		|| [ -x "$HOME/.local/platform-tools/adb" ] \
-		|| adb_not_found
+	[ -x "/usr/local/bin/adb" ] || \
+		[ -x "/usr/bin/adb" ] || \
+		[ -x "$HOME/.local/platform-tools/adb" ] || \
+		adb_not_found
 }
 
 
@@ -161,10 +161,10 @@ check_apk_list() {
 
 # obtain (all) apks included within apk list
 get_apk_list() {
-	(no_stderr cat "$apk_list" || echo "$apk_list") \
-		| sed 's/[[:space:]]/\n/g' \
-		| grep '^\(package:\)\?\([A-Z\*a-z\+\_\*0-9\*]\+[\.]\{1\}\)\+[A-Z\*a-z\+\_\*0-9\*]\+$' \
-		|| apk_list_invalid_format
+	(no_stderr cat "$apk_list" || echo "$apk_list") | \
+		sed 's/[[:space:]]/\n/g' | \
+		grep '^\(package:\)\?\([A-Z\*a-z\+\_\*0-9\*]\+[\.]\{1\}\)\+[A-Z\*a-z\+\_\*0-9\*]\+$' || \
+		apk_list_invalid_format
 }
 
 
@@ -243,7 +243,7 @@ post_action() {
 	
 	unset action linecount curr_apk apk_list missed completed i
 
-	printf "press any key to exit... "
+	printf "press [ENTER] to exit... "
 	(read blank)
 }
 

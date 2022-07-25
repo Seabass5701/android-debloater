@@ -50,19 +50,19 @@
    
    - Manual Installation
       #####
-      - Download ADB
+      1) Download ADB
       ```shell
          curl --remote-name --location "https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
       ```
       #####
-      - Extract to an *_appropriate_* directory
+      2) Extract to an *_appropriate_* directory
       ```shell
          export adb_dir="$HOME/.local"
          mkdir "$adb_dir"
          unzip -qq "platform-tools-latest-linux.zip" -d "$adb_dir"
       ```
       #####
-      - Adjust PATH variable
+      3) Adjust PATH variable
       ```shell
          export PATH="$PATH:$adb_dir/platform-tools:"
       ```
@@ -75,17 +75,19 @@
 <details><summary><b>2) Enable USB Debugging</b></summary>
    
    #####
-   - Go into the "Settings" app on your device
+   1) Go into the "Settings" app on your device
    #####
-   - Go to "About" / "About-Phone
+   2) Within the "Settings" app, search for: "Build Number"
+   
+      usually located in (Settings >> About >> Software Information)
    #####
-   - Go to "Software Information"
+   3) Tap "Build Number" 5 times consecutively, until Developer Mode is enabled
    #####
-   - Tap "Build Number" 5 times consecutively, until Developer Mode is enabled
+   4) Within the "Settings" app, search for: "Developer Settings"
+      
+      usually located in (Settings >> Developer Settings)
    #####
-   - Go to "Developer Settings"
-   #####
-   - Toogle "USB Debugging" On
+   5) Toggle "USB Debugging" On
    #####
    
    ##

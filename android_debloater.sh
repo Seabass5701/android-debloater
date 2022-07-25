@@ -27,7 +27,7 @@ no_out() { "$@" >/dev/null 2>&1; }
 
 
 # by default, the "action" variable will be set to the first argument passed to script ($1).
-no_stderr "${action:="$1"}"
+: "${action:="$1"}"
 
 
 # by default, the "apk_list" variable will be set to the second argument passed to script ($2).
@@ -51,9 +51,9 @@ no_stderr "${action:="$1"}"
 # if (at-least) two arguments
 [ -n "$1" ] && [ -n "$2" ] && \
         # remove first arg + space after first arg
-	no_stderr "${apk_list:=${@##"$1"[[:space:]]}}" || \
+	: "${apk_list:=${@##"$1"[[:space:]]}}" || \
 	# else (if < 2 args) only remove first arg
-	no_stderr "${apk_list:=${@##"$1"}}"
+	: "${apk_list:=${@##"$1"}}"
 
 
 # display help

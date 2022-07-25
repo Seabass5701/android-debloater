@@ -98,9 +98,9 @@
 <details><summary><b>3) Initiate ADB connection between android device and computer</b></summary>
 
    #####
-   - Connect android device to computer via USB cable
+   1) Connect android device to computer via USB cable
    #####
-   - Authorize connection to computer from your device
+   2) Authorize connection to computer from your device
    
    ##
    

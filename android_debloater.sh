@@ -294,10 +294,12 @@ post_action() {
 			"(NOTE: reboot must take place for change(s) to take effect!)"
 		read reboot_status
 		
+		echo
+		
 		case "$reboot_status" in
 			[Yy][Ee][Ss]|[Yy])
 				# reboot device
-				printf "%s\n" "rebooting device.."
+				printf "%s\n\n" "rebooting device.."
 				sleep .5
 				adb reboot
 				;;

@@ -302,7 +302,8 @@ post_action() {
 				adb reboot
 				;;
 				        *)
-				return ;;
+				continue
+				;;
 		esac
         } || {
                 printf "\n%s\n\n%s%u\n\n" \
@@ -314,7 +315,7 @@ post_action() {
 
         shutdown_adb
 
-        unset action linecount curr_apk apk_list missed completed i
+        unset action linecount curr_apk apk_list missed completed i reboot_status
 
         printf "%s" "press [ENTER] to exit... "
         (read blank)
@@ -351,6 +352,6 @@ do_all() {
         (precheck && begin_action)
 }
 
-trap '[ -n "$(pgrep adb)" ] && shutdown_adb; unset action linecount curr_apk apk_list missed completed i;' HUP INT
+trap '[ -n "$(pgrep adb)" ] && shutdown_adb; unset action linecount curr_apk apk_list missed completed i reboot_status;' HUP INT
 
 do_all

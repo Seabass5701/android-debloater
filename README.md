@@ -9,7 +9,7 @@
 ## Overall Scope
 
 ### This script aims to be:
-   - small (written in a little ~~over 200~~ under 300-lines)
+   - small (written in a little over 300-lines)
    - simple (not overly complex, but gets the job done)
    - quick (written for dash, which runs faster than bash)
    - efficient (quite performant, given its size and simplicity)

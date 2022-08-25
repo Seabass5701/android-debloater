@@ -83,8 +83,8 @@ action_not_found() {
 
 # return error when adb is not installed (or added to runtime exec-path)
 adb_not_found() {
-        printf "%s\n" \
-                "adb could not be found\n" \
+        printf "%s\n\n" \
+                "adb could not be found" \
                 >&2
 	printf "%s\n" \
 		"proceed with automatic installation of adb?"

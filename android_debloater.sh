@@ -16,8 +16,9 @@
 # (otherwise unknown) apks, which may be found on your android device.
 
 
-completed=0
-missed=0
+completed=0			# no. of successful actions
+missed=0			# no. of failed actions
+script_dir="$(dirname $0)"	# in case sdk tools need to be installed
 
 
 # silence output (to stdout(1) & stderr(2), or both)
@@ -85,7 +86,17 @@ adb_not_found() {
         printf "%s\n" \
                 "adb could not be found\n" \
                 >&2
-        return 1
+	printf "%s\n" \
+		"proceed with automatic installation of adb?"
+		
+	read install_status
+	
+	echo
+	
+	case "$install_status" in
+		[Yy][Ee][Ss]|[Yy]) . "$script_dir/get_sdk_tools.sh" ;;
+				*) return 1 ;;
+	esac
 }
 
 

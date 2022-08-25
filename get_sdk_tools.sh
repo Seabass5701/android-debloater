@@ -31,10 +31,12 @@ case "$(arch)" in
                                        *) printf "%s\n%s\n" \
                                                 "Unrecognized Linux Distribution: \"$distro_id\"" \
                                                 "Install from distro package manager, or build android sdk-tools from source-code..."
-                                          return 1;
+                                          return 1
+                                          ;;
                         esac
+
+                        exit
                         ;;
-        exit
 esac
                
 

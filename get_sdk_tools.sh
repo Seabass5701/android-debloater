@@ -34,6 +34,7 @@ case "$(arch)" in
                                           return 1;
                         esac
                         ;;
+        exit
 esac
                
 

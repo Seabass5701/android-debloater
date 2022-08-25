@@ -14,15 +14,15 @@ distro_check() {
 # command for installing sdk-tools from common distro
 # package managers
 distro_install() {
-        distro_check || {
+        distro_check && printf "%s\n" "Performing $distro_id distro sdk-tools installation..." || {
                 printf "%s\n%s\n" \
                         "Unrecognized Linux Distribution" \
                         "Install from distro package manager, or build android sdk-tools from source-code..." \
                         >&2
-                return 1
+                exit 1
         };
         
-        printf "%s\n" "Performing $distro_id distro sdk-tools installation..."
+        
         
         case "$distro_id" in
                 "debian") sudo apt-get --quiet --assume-yes install adb        ;;

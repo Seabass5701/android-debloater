@@ -81,7 +81,7 @@ action_not_found() {
 }
 
 
-# return error when adb is not installed (or added to runtime exec-path)
+# [attempt to] install adb if not found
 adb_not_found() {
         printf "%s\n\n" \
                 "adb not found" \

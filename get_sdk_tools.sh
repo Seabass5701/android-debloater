@@ -7,7 +7,7 @@ distro_id="$(grep ^ID /etc/os-release | cut -d '=' -f2)"
 
 # command for checking if distro is compatible with script
 distro_check() {
-        [ "$distro_id" = "debian" ] || [ "$distro_id" = "fedora" ] || [ "$distro_id" = "arch" ]
+        [ "$distro_id" = "debian" ] || [ "$distro_id" = "ubuntu" ] || [ "$distro_id" = "fedora" ] || [ "$distro_id" = "arch" ]
 }
 
 
@@ -25,7 +25,7 @@ distro_install() {
         
         
         case "$distro_id" in
-                "debian") sudo apt-get --quiet --assume-yes install adb        ;;
+       "debian"|"ubuntu") sudo apt-get --quiet --assume-yes install adb        ;;
                 "fedora") sudo dnf --quiet --assumeyes install android-tools   ;;
                   "arch") sudo pacman --sync --noconfirm --quiet android-tools ;;
         esac

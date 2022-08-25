@@ -38,6 +38,7 @@ repo_install() {
 
         # Google only packages pre-compiled binaries for sdk tools,
         # for x86_64, and not aarch64 or arm...
+        printf "%s\n" "Performing repo sdk-tools installation..."
 
         # Official Android SDK Platform Tools Repository
         sdk_tools_url="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"

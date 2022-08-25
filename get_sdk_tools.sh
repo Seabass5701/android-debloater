@@ -1,8 +1,41 @@
 #!/usr/bin/env sh
 
 
-# Official Android SDK Platform Tools Repository
-sdk_tools_url="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
+# Linux Distribution in use
+distro_id="$(grep ^ID /etc/os-release | cut -d '=' -f2)"
+
+
+# Google only packages pre-compiled binaries for sdk tools,
+# for x86_64, and not aarch64 or arm...
+case "$(arch)" in
+        "x86_64")
+                        # Official Android SDK Platform Tools Repository
+                        sdk_tools_url="https://dl.google.com/android/repository/platform-tools-latest-linux.zip" ;;
+               *)
+                        printf "%s\n%s" \
+                                "Pre-compiled binaries for $(arch) not available" \
+                                "Try installing directly from package-manager instead?"
+                        read pm_status;
+                        
+                        echo
+                        
+                        case "$pm_status" in
+                                [Yy][Ee][Ss]|[Yy]) return ;;
+                                                *) exit   ;;
+                        esac
+                        
+                        case "$distro_id" in
+                                "debian") sudo apt-get install -y adb    ;;
+                                "fedora") sudo dnf install android-tools ;;
+                                  "arch") sudo pacman -S android-tools   ;;
+                                       *) printf "%s\n%s\n" \
+                                                "Unrecognized Linux Distribution: \"$distro_id\"" \
+                                                "Install from distro package manager, or build android sdk-tools from source-code..."
+                                          return 1;
+                        esac
+                        ;;
+esac
+               
 
 # Directory wherein sdk tools will be placed
 sdk_tools_dir="$HOME/.local"

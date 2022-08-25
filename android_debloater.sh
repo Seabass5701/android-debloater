@@ -84,19 +84,10 @@ action_not_found() {
 # return error when adb is not installed (or added to runtime exec-path)
 adb_not_found() {
         printf "%s\n\n" \
-                "adb could not be found" \
+                "adb not found" \
                 >&2
-	printf "%s\n" \
-		"proceed with automatic installation of adb?"
 		
-	read install_status
-	
-	echo
-	
-	case "$install_status" in
-		[Yy][Ee][Ss]|[Yy]) . "$script_dir/get_sdk_tools.sh" && . "$HOME/.profile" ;;
-				*) return 1 ;;
-	esac
+	. "$script_dir/get_sdk_tools.sh"
 }
 
 

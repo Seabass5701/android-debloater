@@ -25,9 +25,9 @@ distro_install() {
         printf "%s\n" "Performing $distro_id distro sdk-tools installation..."
         
         case "$distro_id" in
-                "debian") sudo apt-get install -y adb >/dev/null 2>&1    ;;
-                "fedora") sudo dnf install android-tools >/dev/null 2>&1 ;;
-                  "arch") sudo pacman -S android-tools >/dev/null 2>&1   ;;
+                "debian") sudo apt-get --quiet --assume-yes install adb        ;;
+                "fedora") sudo dnf --quiet --assumeyes install android-tools   ;;
+                  "arch") sudo pacman --sync --noconfirm --quiet android-tools ;;
         esac
 }
 

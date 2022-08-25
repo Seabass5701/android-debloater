@@ -73,7 +73,7 @@ tmpfile="/tmp/platform-tools-latest-linux.zip"
 };
 
 
-unzip -qq -o -f "$tmpfile" -d "$sdk_tools_dir"
+unzip -qq -o "$tmpfile" -d "$sdk_tools_dir"
 
 
 [ -d "$sdk_tools_dir/bin" ] || {

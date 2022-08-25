@@ -5,19 +5,29 @@
 distro_id="$(grep ^ID /etc/os-release | cut -d '=' -f2)"
 
 
+# command for checking if distro is compatible with script
+distro_check() {
+        [ "$distro_id" = "debian" ] || [ "$distro_id" = "fedora" ] || [ "$distro_id" = "arch" ]
+}
+
+
 # command for installing sdk-tools from common distro
 # package managers
 distro_install() {
+        distro_check || {
+                printf "%s\n%s\n" \
+                        "Unrecognized Linux Distribution" \
+                        "Install from distro package manager, or build android sdk-tools from source-code..." \
+                        >&2
+                return 1
+        };
+        
+        printf "%s\n" "Performing $distro_id distro sdk-tools installation..."
+        
         case "$distro_id" in
-                "debian") sudo apt-get install -y adb    ;;
-                "fedora") sudo dnf install android-tools ;;
-                  "arch") sudo pacman -S android-tools   ;;
-                       *) printf "%s\n%s\n" \
-                                "Unrecognized Linux Distribution: \"$distro_id\"" \
-                                "Install from distro package manager, or build android sdk-tools from source-code..." \
-                                >&2
-                          return 1
-                          ;;
+                "debian") sudo apt-get install -y adb >/dev/null 2>&1    ;;
+                "fedora") sudo dnf install android-tools >/dev/null 2>&1 ;;
+                  "arch") sudo pacman -S android-tools >/dev/null 2>&1   ;;
         esac
 }
 
@@ -78,8 +88,6 @@ repo_install() {
         do
                 [ -h "$bin" ] || ln -s "../platform-tools/$bin" "$bin"
         done
-        
-        printf "%s\n" "Run (source \"\$HOME/.profile\") to apply changes..."
 }
 
 
@@ -91,9 +99,7 @@ get_install_method() {
                 # default to a repo install (for compatibility reasons)
                 "x86_64") repo_install   ;;
                 # default to a distro package-manager installation
-                       *) distro_install
-                          exit
-                          ;;
+                       *) distro_install ;;
         esac
 }
 

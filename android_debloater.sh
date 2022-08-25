@@ -94,7 +94,7 @@ adb_not_found() {
 	echo
 	
 	case "$install_status" in
-		[Yy][Ee][Ss]|[Yy]) . "$script_dir/get_sdk_tools.sh" ;;
+		[Yy][Ee][Ss]|[Yy]) . "$script_dir/get_sdk_tools.sh" && . "$HOME/.profile" ;;
 				*) return 1 ;;
 	esac
 }

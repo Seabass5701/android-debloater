@@ -103,4 +103,5 @@ restore - restore [deleted] packages
        [...]
 ```
 
-##
+## Miscellaneous
+   - adb need not be installed by the user anymore (get_sdk_tools.sh takes care of this, now)

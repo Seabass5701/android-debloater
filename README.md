@@ -1,22 +1,30 @@
 # android-debloater
 
->A minimal POSIX shell script to assist in debloating android devices.
+A <i>POSIX-compliant</i> shell script for automating the debloat process of Android Devices
 
-#### **\*NOTE:  _POSIX-compliant_ shell required!\*** ####
 ####
 
+### <b>Requirements</b>:
+- POSIX-Compliant Shell (<b>dash</b>, <b>ash</b>, etc..)
+- <i>USB-Capable PC</i> running Linux-Distribution (<b>Debian</b>/<b>Ubuntu</b>, <b>Fedora</b>, <b>Arch-Linux</b>) <i>for now</i>
+- Android Device <i>w/ USB-Cable</i> (root <b>NOT</b> required)
+- Keep note of <i>which apks you wish to</i> <b>debloat</b>
+###
 
-## Overall Scope
+##
+### Overall Scope
 
 ###
    - portability (POSIX-compliance provides greater conformity)
    - automation (automate the task of <b>debloating</b> or <b>restoring</b> apks)
-   - simplicity (does _two_ things: <b>debloats</b> & <b>restores</b>)</b>
+   - simplicity (does <b>two</b> things: <b>debloats</b> and <b>restores</b>)
 ###
 
-## Getting Started
 
-#### Before anything else, perform the following steps:
+##
+### Getting Started
+
+#### Before proceeding, perform the following steps:
 
 ####
 <details><summary><b>1) [Enable Developer Mode]</b></summary>
@@ -56,7 +64,11 @@
    
 </details>
 
-#### Next, obtain sources
+
+##
+####
+####
+#### Then, finally, obtain the sources
 #####
 ```shell
 git clone https://github.com/Seabass5701/android-debloater.git
@@ -65,7 +77,10 @@ chmod u+x ./*.sh
 ```
 #####
 ####
-## Usage
+####
+####
+##
+### Usage
 
 ```
     android_debloater.sh { [<action>] [<apk_list>] || help }
@@ -77,12 +92,12 @@ action   - action to perform on [<apk_list>]
 apk_list - apk[s] to perform [<action>] upon
 help     - display help menu
 ```
-#### [action]
+#### [\<action>]
 ```shell
 debloat - debloat packages
 restore - restore [deleted] packages
 ```
-#### [apk_list]
+#### [\<apk_list>]
 - may be passed as a file, which contains list of apks (comments allowed)
 ```shell
 # file should be formatted as follows:
@@ -102,9 +117,9 @@ restore - restore [deleted] packages
 ```
 
 ## Miscellaneous
-Although many debloat scripts exist already, <b>this script (in particular)</b> was written to:
-- *__greatly minimize work needed__*,
-- *__be fast in execution-speed__*,
+Although many debloat scripts <i>exist already</i>, <b>this script (in particular)</b> was written to:
+- <b><i>vastly minimize (amount of) work needed</i></b>,
+- <b><i>be fast in execution-speed</i></b>,
 
 when debloating/restoring apks on an Android Device.
 

@@ -72,13 +72,11 @@ chmod u+x ./*.sh
 ```
 
 #### Parameters
-
-action   - action to perform on [<apk_list>] (debloat / restore)
-
-apk_list - [list of] apks to perform [<action>] upon
-
+```shell
+action   - action to perform on [<apk_list>]
+apk_list - apk[s] to perform [<action>] upon
 help     - display help menu
-
+```
 #### [action]
 ```shell
 debloat - debloat packages

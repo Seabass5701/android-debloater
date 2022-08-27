@@ -8,7 +8,7 @@ A <i>POSIX-compliant</i> shell script for automating the debloat process of Andr
 - POSIX-Compliant Shell (<b>dash</b>, <b>ash</b>, etc..)
 - <i>USB-Capable PC</i> running Linux-Distribution (<b>Debian</b>/<b>Ubuntu</b>, <b>Fedora</b>, <b>Arch-Linux</b>) <i>for now</i>
 - Android Device <i>w/ USB-Cable</i> (root <b>NOT</b> required)
-- Keep note of <i>which apks you wish to</i> <b>debloat</b>
+- Know <i>which apks you wish to</i> <b>debloat</b>
 ###
 
 ##

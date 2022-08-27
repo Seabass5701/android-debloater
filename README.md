@@ -8,189 +8,99 @@
 
 ## Overall Scope
 
-### This script aims to be:
-   - small (written in a little over 300-lines)
-   - simple (not overly complex, but gets the job done)
-   - quick (written for dash, which runs faster than bash)
-   - efficient (quite performant, given its size and simplicity)
 ###
-
-### It simply does *_two_* things:
-   - debloats
-   - restores
-###
-
-### It can read apks:
-   - from a file
-   - passed as arguments to the script after [<action\>]
-   
+   - portability (POSIX-compliance provides greater conformity)
+   - automation (automate the task of <b>debloating</b> or <b>restoring</b> apks)
+   - simplicity (does _two_ things: <b>debloats</b> & <b>restores</b>)</b>
 ###
 
 ## Getting Started
 
-####
+#### Before anything else, perform the following steps:
 
-<details><summary><b>1) Install ADB</b></summary>
+####
+<details><summary><b>1) [Enable Developer Mode]</b></summary>
    
    #####
-   - Ubuntu/Debian
-   ```shell
-      sudo apt-get update && sudo apt-get install adb
+   1) Go into the "Settings" app on your Android Device
+   #####
+   2) Search for: "Build Number"
    ```
-   
-   - Arch-Linux
-   ```shell
-      sudo pacman -S android-tools
+   (usually located somewhere in Settings -> About)
    ```
-   
-   - Fedora
-   ```shell
-      sudo dnf install android-tools
-   ```
-   
-   - Manual Installation
-      #####
-      1) Download ADB
-      ```shell
-         curl --remote-name --location "https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
-      ```
-      #####
-      2) Extract to an *_appropriate_* directory
-      ```shell
-         export adb_dir="$HOME/.local"
-         mkdir "$adb_dir"
-         unzip -qq "platform-tools-latest-linux.zip" -d "$adb_dir"
-      ```
-      #####
-      3) Adjust PATH variable
-      ```shell
-         export PATH="$PATH:$adb_dir/platform-tools:"
-      ```
-   
+   #####
+   3) Tap "Build Number" 5 times consecutively (agreeing/responding to any prompts as required)
+   #####
+   <b>After performing these steps, you should receive a notification that Developer Mode was enabled</b>
    ##
    
 </details>
 
 ####
-<details><summary><b>2) Enable USB Debugging</b></summary>
-   
-   #####
-   1) Go into the "Settings" app on your device
-   #####
-   2) Within the "Settings" app, search for: "Build Number"
-   
-      usually located in (Settings >> About >> Software Information)
-   #####
-   3) Tap "Build Number" 5 times consecutively, until Developer Mode is enabled
-   #####
-   4) Within the "Settings" app, search for: "Developer Settings"
-      
-      usually located in (Settings >> Developer Settings)
-   #####
-   5) Toggle "USB Debugging" On
-   #####
-   
-   ##
-   
-</details>
-
-####
-<details><summary><b>3) Initiate ADB connection between android device and computer</b></summary>
+<details><summary><b>2) [Enable USB Debugging]</b></summary>
 
    #####
-   1) Connect android device to computer via USB cable
+   1) Go into the "Settings" app on your Android Device
    #####
-   2) Authorize connection to computer from your device
-   
-   ##
-   
-</details>
-
-####
-<details><summary><b>4) Clone the repo</b></summary>
-   
-   #####
-   ```shell
-      git clone https://github.com/Seabass5701/android-debloater
-      cd android-debloater
-      chmod u+x android_debloater.sh
+   2) Search for: "Developer Settings"
+   ```
+   (usually located in the root of the settings menu, otherwise in Settings -> System)
    ```
    #####
+   3) Toggle "USB Debugging" to on (continue, if given a warning)
+   #####
+   <b>IMPORTANT NOTE:</b>
+   
+   Do not leave USB Debugging on for longer than you intend to keep your device connected!
+   ##
+   
 </details>
 
+#### Next, obtain sources
+#####
+```shell
+git clone https://github.com/Seabass5701/android-debloater.git
+cd android-debloater
+chmod u+x ./*.sh
+```
+#####
+####
 ## Usage
 
 ```
-    android_debloater.sh [<action>] [<apk_list>]
+    android_debloater.sh { [<action>] [<apk_list>] || help }
 ```
 
+#### Parameters
 
-apk_list - path to apk file list / apks passed to the script after action
+action   - action to perform on [<apk_list>] (debloat / restore)
 
-debloat - debloats packages within apk_list
+apk_list - [list of] apks to perform [<action>] upon
 
-restore - restores [deleted] packages within apk_list
+help     - display help menu
 
-help    - displays a help-menu
+#### [action]
+```shell
+debloat - debloat packages
+restore - restore [deleted] packages
+```
+#### [apk_list]
+- may be passed as a file, which contains list of apks (comments allowed)
+```shell
+# file should be formatted as follows:
 
-## Optional (Create your own debloat-list)
-   
-   ### *to transfer list of apks to a file:*
-   
-   ```shell
-    (adb shell pm list packages) > "<path_to_apk_list>"
-   ```
-   
-   **NOTE:**
-   
-   *apks within apk_list file, must have the following format:*
+# here is a test comment
+[package:]com.android.chrome        # Google Chrome APK
+[package:]com.android.bluetooth     # Bluetooth APK
+[...]                               # Etc..
+```
 
-   ```shell
-      [package:]com.android.chrome
-      [package:]com.android.bluetooth
-      [...]
-   ```
-   
-   Afterwards, you may leave **only** *_the packages you wish to delete_*,
-   commenting out ones you wish to save (if necessary) or removing them.
+- may be passed as actual apk name[s]
+```shell
+./android_debloater.sh [<action>] \
+       com.android.chrome \
+       com.android.bluetooth \
+       [...]
+```
 
-   ##
-   
-   ### *to pass apks to the script as argument:*
-
-   ```shell
-    ./android_debloater.sh debloat \
-            [package:]com.android.chrome \
-            [package:]com.android.bluetooth \
-            [...]
-   ```
-   
-   **NOTE:**
-   
-   *apks passed as arguments to the script, must have the following format:*
-
-   ```shell
-      [package:]com.android.chrome [package:]com.android.bluetooth [...]
-   ```
-
-   ##
-   
-   ####
-   - Do some research on which apk files are unnecessary (worthy of debloat)
-   
-   ####
-   - Determine which apk files you **need** and **dont**
-
-   ####
-   - Find debloat-lists which others have created, for your device (**be careful!**)
-   
-   ####
-
-
-
-
-
-   
-
-   
-   
+##

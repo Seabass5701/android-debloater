@@ -26,6 +26,7 @@ A <i>POSIX-compliant</i> shell script for automating the debloat process of Andr
 
 #### Before proceeding, perform the following steps:
 
+##
 ####
 <details><summary><b>1) [Enable Developer Mode]</b></summary>
    
@@ -40,7 +41,6 @@ A <i>POSIX-compliant</i> shell script for automating the debloat process of Andr
    3) Tap "Build Number" 5 times consecutively (agreeing/responding to any prompts as required)
    #####
    <b>After performing these steps, you should receive a notification that Developer Mode was enabled</b>
-   ##
    
 </details>
 
@@ -60,7 +60,6 @@ A <i>POSIX-compliant</i> shell script for automating the debloat process of Andr
    <b>IMPORTANT NOTE:</b>
    
    Do not leave USB Debugging on for longer than you intend to keep your device connected!
-   ##
    
 </details>
 
@@ -116,11 +115,12 @@ restore - restore [deleted] packages
        [...]
 ```
 
-## Miscellaneous
+##
+### Miscellaneous
 Although many debloat scripts <i>exist already</i>, <b>this script (in particular)</b> was written to:
 - <b><i>vastly minimize (amount of) work needed</i></b>,
 - <b><i>be fast in execution-speed</i></b>,
 
-when debloating/restoring apks on an Android Device.
+...when debloating/restoring apks on an Android Device.
 
 If adb is not installed, the script will run the "get_sdk_tools.sh" script.

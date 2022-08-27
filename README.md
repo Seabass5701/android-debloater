@@ -104,4 +104,10 @@ restore - restore [deleted] packages
 ```
 
 ## Miscellaneous
-   - adb need not be installed by the user anymore (get_sdk_tools.sh takes care of this, now)
+Although many debloat scripts exist already, <b>this script (in particular)</b> was written to:
+- *__greatly minimize work needed__*,
+- *__be fast in execution-speed__*,
+
+when debloating/restoring apks on an Android Device.
+
+If adb is not installed, the script will run the "get_sdk_tools.sh" script.

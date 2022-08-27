@@ -1,6 +1,6 @@
 # android-debloater
 
-A <i>POSIX-compliant</i> shell script for automating the debloat process of Android Devices
+A <i>POSIX-compliant</i> shell script for automating the debloat process of Android Devices.
 
 ####
 

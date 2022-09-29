@@ -82,12 +82,12 @@ error() {
       exit 1
       ;;
     adb_not_installed)
-      # [attempt to] install adb if not found
+      # [attempt to] install adb if not found (else exit)
       printf "%s\n\n" "adb not found" >&2
       ( . "$script_dir/get_sdk_tools.sh" & wait $! ) || exit $?
       ;;
     device_not_connected)
-      # return error when no device is recognizable by, or connected to adb
+      # exit if no device is recognized by, or connected to adb
       printf "%s\n\n%s\n%s\n%s\n" "check that android device is:" \
                                   "1)turned on" \
                                   "2)plugged into your pc (via usb)" \
@@ -96,17 +96,17 @@ error() {
       exit 1
       ;;
     invalid_adb_state)
-      # return error when adb state is invalid
+      # exit if adb state is invalid
       printf "%s\n" "invalid adb-state: $state" >&2
       exit 1
       ;;
     apk_not_found)
-      # return error when apk can not be found (for de-installation)
+      # return error if apk can not be found
       printf "%s\n" "[-] error [$i/$linecount]: $current_apk not found.." >&2
       return 1
       ;;
     action_failure)
-      # return error msg
+      # return error if the action failed
       printf "%s\n" "[-] error ${action%%e}ing [$i/$linecount]: $current_apk" >&2
       return 1
       ;;
@@ -195,9 +195,9 @@ check_adb() (
 # ensure correctness of parameters
 check_parameters() {
   case ${#} in
-    0) help; exit 1;;
-    1) check_action && [ "${action}" != "help" ] && error invalid_apk_list;;
-    *) check_action && [ "${action}" != "help" ] && check_apk_list >/dev/null;;
+    0) help; exit 1                                                           ;;
+    1) check_action && [ "${action}" != "help" ] && error invalid_apk_list    ;;
+    *) check_action && [ "${action}" != "help" ] && check_apk_list >/dev/null ;;
   esac
 }
 
@@ -206,7 +206,7 @@ check_parameters() {
 do_action() (
   case ${action} in
     debloat) adb shell pm uninstall "$current_apk" >/dev/null 2>&1 || adb shell pm uninstall --user 0 "$current_apk" >/dev/null 2>&1 ;;
-    restore) adb shell cmd package install-existing "$current_apk" >/dev/null 2>&1 ;;
+    restore) adb shell cmd package install-existing "$current_apk" >/dev/null 2>&1                                                   ;;
   esac
 )
 
@@ -227,21 +227,21 @@ post_action() (
            "apks not ${action%%e}ed: " \
            "$missed"
     sleep 1
-                printf "%s\n%s\n" \
-                        "reboot device?" \
-                        "(NOTE: reboot must take place for change(s) to take effect!)"
-                read response
-                echo
-                case ${response} in
-                        [Yy][Ee][Ss]|[Yy])
-                                # reboot device
-                                printf "%s\n\n" "rebooting device.."
-                                sleep .5
-                                adb reboot
-                                ;;
-                                              *)
-                                ;;
-                esac
+    printf "%s\n%s\n" \
+           "reboot device?" \
+           "(NOTE: reboot must take place for change(s) to take effect!)"
+    read response
+    echo
+    case ${response} in
+      [Yy][Ee][Ss]|[Yy])
+        # reboot device
+        printf "%s\n\n" "rebooting device.."
+        sleep .5
+        adb reboot
+        ;;
+                      *)
+        ;;
+    esac
   } || {
     printf "\n%s\n\n%s\n\n" "apks failed to ${action}.." \
                             "apks not ${action%%e}ed: $missed" \

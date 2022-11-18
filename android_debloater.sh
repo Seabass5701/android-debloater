@@ -118,7 +118,7 @@ error() {
 check_action() {
   case ${action} in
     debloat|restore)                      ;;
-               help) help; exit 0         ;;
+               help) help; return         ;;
                   *) error invalid_action ;;
   esac
 }
